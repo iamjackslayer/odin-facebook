@@ -19,6 +19,7 @@
     <% else %>
     <%= link_to("sign in", new_user_session_path) %>
     <%= link_to("sign up", new_user_registration_path) %>
+    <%= link_to("sign in with Facebook", user_facebook_omniauth_authorize_path) %>
     <% end %>
     <%= yield %>
   </body>
