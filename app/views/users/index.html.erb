@@ -1,0 +1,43 @@
+<% if user_signed_in? %>
+	<% if current_user.notifications %>
+		<p>Notifications: </p>
+		<ul>
+			<% current_user.notifications.each do |n| %>
+				<li>
+					<%= User.find_by_id(n.requester_id).email %> sends a friend request. <%= form_for(:friend,url:{controller: :friendships, action: :create, id: n.requester_id}, method: :post) do |f| %>
+						<%= f.submit("Accept") %>
+					<% end %>
+				</li>
+			<% end %>
+		</ul>
+	<% end %>
+	<p>My posts:</p>
+	<% if !current_user.posts.empty? %>
+		<ol>
+			<% current_user.posts.each do |post| %>
+				<li>
+					<p><%= post.content[0..20] %>...</p>
+					<%= link_to("show more", "post/#{post.id}/show") %> (<%= time_ago_in_words(post.created_at)%> ago)
+				</li>
+			<% end %>
+		</ol>
+		
+	<% end %>
+	<br>
+	<h3>Friend's posts:</h3>
+	<% if @friends %>
+		<% @friends.each do |fren| %>
+			Posted by <%= fren.email %><br>
+			<ol>
+			<% fren.posts.each do |post| %>
+			<li>
+					<p><%= post.content[0..20] %>...</p>
+					<%= link_to("show more","/post/#{post.id}/show")%> (<%= time_ago_in_words(post.created_at) %> ago)
+			</li>
+			<% end %>
+			</ol>
+		<% end %>
+	<% end %>
+<% else %>
+	<h1>Please sign in to see posts. And write posts. And follow friends. And stalk people's email addresses.</h1>
+<% end %>

@@ -1,0 +1,45 @@
+<% if @target_user != current_user %>
+	<p>Email:<%= @target_user.email %></p>
+	<p>Number of friends: <%= current_user.friends.count %></p>
+	<p>
+		Friends:
+		<ul>
+			<% @target_user.friends.each do |fren| %>
+				<li><%= link_to(fren.email,"/user/#{fren.id}/profile")%></li>
+			<% end %>
+		</ul>
+	</p>
+
+	<% if !current_user.friends.include?@target_user %>
+		<% if !@target_user.notifications.where('requester_id = ?',current_user.id).empty? %>
+			<p>You have sent request to this hopefully-soon-to-be-but-not-yet friend.</p>
+		<% end %>
+		<%= form_for(:friend, url:{controller: :friendships, action: :send_request, id: @target_user.id}, method: :post) do |f| %>
+			<%= f.submit("send friend request") %>
+		<% end %>
+	<% else %>
+		<p>You and <%= @target_user.email%> are friends :)</p>
+		<%= form_for(:unfriend, url:{controller: :friendships, action: :destroy, id: @target_user.id}, method: :delete) do |f| %>
+			<%= f.submit(:unfriend) %>
+		<% end %>
+	<% end %>
+<% elsif @target_user == current_user %>
+	<h2>Your pathetic profile:</h2>
+	<p>Email:<%= @target_user.email %></p>
+	<p>Number of friends: <%= current_user.friends.count %></p>
+	<p>
+		Your friends:
+		<ul>
+			<% current_user.friends.each do |fren| %>
+				<li><%= link_to(fren.email,"/user/#{fren.id}/profile") %></li>
+			<% end %>
+		</ul>
+	</p>
+<% end %>
+<br>
+<%= form_for(:user, url:{controller: :users, action: :profile}, method: :get) do |f| %>
+	<p>
+		Find a user by email: <%= f.text_field(:email)%>
+		<%= f.submit("Find!") %>	
+	</p>
+<% end %>
