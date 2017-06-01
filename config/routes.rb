@@ -4,9 +4,9 @@ Rails.application.routes.draw do
   	registrations: 'users/registrations',
   	omniauth_callbacks: 'users/omniauth_callbacks'
   }
-  devise_scope :user do 
-  	delete 'sign_out', to: 'devise/sessions#destroy', as: :destroy_user_session
-  end
+  # devise_scope :user do 
+  # 	delete 'sign_out', to: 'devise/sessions#destroy', as: :destroy_user_session
+  # end
 
   root 'users#index'
 
